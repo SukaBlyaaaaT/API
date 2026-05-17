@@ -1,0 +1,18 @@
+A API foi desenvolvida em Node.js com Express, usando PostgreSQL com Sequelize.
+Existem duas entidades principais: tipos de lavagem e atendimentos.
+Cada entidade possui rotas CRUD completas.
+Além disso, foi implementada a regra de negócio de finalização do atendimento, que calcula o tempo total com base na diferença entre início e fim, e define o valor final conforme o tipo de lavagem.
+
+Passo 8 — como saber se terminou
+
+Se estiver funcionando:
+
+GET /tipos-lavagem mostra registros
+GET /tipos-lavagem/1 funciona
+PUT /tipos-lavagem/1 atualiza
+DELETE /tipos-lavagem/1 exclui
+GET /atendimentos mostra registros
+GET /atendimentos/1 funciona
+PUT /atendimentos/1 atualiza
+DELETE /atendimentos/1 exclui
+PUT /atendimentos/1/finalizar calcula tempo e valor
