@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const TipoLavagem = require('./models/TipoLavagem');
-const Atendimento = require('./models/Atendimento');
+const TipoLavagem = require('../models/TipoLavagem');
+const Atendimento = require('../models/Atendimento');
 
 
 // Criar tipo de lavagem
@@ -20,12 +20,21 @@ router.get('/tipos-lavagem', async (req, res) => {
 
 // Criar atendimento
 router.post('/atendimentos', async (req, res) => {
-    const atendimento = await Atendimento.create({
-        ...req.body,
-        data_inicio: new Date()
-    });
+    try {
+        console.log("Dados recebidos:", req.body);
 
-    res.json(atendimento);
+        const atendimento = await Atendimento.create({
+            cliente: req.body.cliente,
+            placa: req.body.placa,
+            TipoLavagemId: req.body.TipoLavagemId,
+            data_inicio: new Date()
+        });
+
+        res.json(atendimento);
+    } catch (error) {
+        console.log("Erro ao criar atendimento:", error);
+        res.status(500).json({ erro: error.message });
+    }
 });
 
 
@@ -48,6 +57,48 @@ router.put('/atendimentos/:id/finalizar', async (req, res) => {
     res.json(atendimento);
 });
 
+// Buscar tipo por ID
+router.get('/tipos-lavagem/:id', async (req, res) => {
+    const dados = await TipoLavagem.findByPk(req.params.id);
+    res.json(dados);
+});
+
+// Editar tipo
+router.put('/tipos-lavagem/:id', async (req, res) => {
+    const tipo = await TipoLavagem.findByPk(req.params.id);
+    await tipo.update(req.body);
+    res.json(tipo);
+});
+
+// Excluir tipo
+router.delete('/tipos-lavagem/:id', async (req, res) => {
+    const tipo = await TipoLavagem.findByPk(req.params.id);
+    await tipo.destroy();
+    res.json({ mensagem: 'Tipo de lavagem excluído com sucesso' });
+});
+
+
+// Buscar atendimento por ID
+router.get('/atendimentos/:id', async (req, res) => {
+    const dados = await Atendimento.findByPk(req.params.id, {
+        include: TipoLavagem
+    });
+    res.json(dados);
+});
+
+// Editar atendimento
+router.put('/atendimentos/:id', async (req, res) => {
+    const atendimento = await Atendimento.findByPk(req.params.id);
+    await atendimento.update(req.body);
+    res.json(atendimento);
+});
+
+// Excluir atendimento
+router.delete('/atendimentos/:id', async (req, res) => {
+    const atendimento = await Atendimento.findByPk(req.params.id);
+    await atendimento.destroy();
+    res.json({ mensagem: 'Atendimento excluído com sucesso' });
+});
 
 // Listar atendimentos
 router.get('/atendimentos', async (req, res) => {

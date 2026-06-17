@@ -1,14 +1,24 @@
 const express = require('express');
+const cors = require('cors');
+
 const app = express();
 
-const sequelize = require('./database/conexao');
-const routes = require('./routes');
-
+app.use(cors());
 app.use(express.json());
-app.use(routes);
 
-sequelize.sync().then(() => {
-    app.listen(3000, () => {
-        console.log('Servidor rodando na porta 3000');
-    });
+const routes = require('./routes/routes');
+
+app.use('/', routes);
+
+const PORT = 3001;
+
+const sequelize = require('./database/conexao');
+
+require('./models/TipoLavagem');
+require('./models/Atendimento');
+
+sequelize.sync({ alter: true });
+
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
 });

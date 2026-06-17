@@ -2,18 +2,9 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../database/conexao');
 
 const TipoLavagem = sequelize.define('TipoLavagem', {
-    nome: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    valor: {
-        type: DataTypes.FLOAT,
-        allowNull: false
-    },
-    tempo_estimado: {
-        type: DataTypes.FLOAT,
-        allowNull: false
-    }
+  nome: DataTypes.STRING,
+  valor: DataTypes.FLOAT,
+  tempo_estimado: DataTypes.FLOAT
 });
 
 module.exports = TipoLavagem;
